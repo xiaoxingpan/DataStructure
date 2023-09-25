@@ -1,0 +1,10 @@
+Toyota Camry;2.5;2020
+Honda Civic;1.8;2021
+Ford Mustang;5.0;2019
+Chevrolet Malibu;2.0;2022
+Nissan Altima;2.5;2020
+Hyundai Sonata;2.4;2021
+Kia Sportage;2.0;2023
+BMW X5;3.0;2022
+Audi A4;2.0;2023
+Jeep Wrangler;3.6;2021
