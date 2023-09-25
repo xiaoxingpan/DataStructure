@@ -31,6 +31,7 @@ public class RoundFIFOQueue<T extends Comparable> {
         }
     }
 
+    // start with enqueue data
     public void printQueue() {
         if (size == 0) {
             System.out.println("Queue is empty");
@@ -109,19 +110,35 @@ public class RoundFIFOQueue<T extends Comparable> {
         return size;
     }
 
-    // returns array of "size" number of elements with most recently enqueued elements first (following "next" references)
+    // start with dequeue data
     public T[] toArray(T[] template) {
-
-        throw new RuntimeException("Not Implemented!");
-
+        T[] result = (T[]) java.lang.reflect.Array.newInstance(template.getClass().getComponentType(), size);
+        Node currentNode = dequeue;
+        for (int i = size - 1; i >= 0; i--) {
+            // if node value is null, go to next
+            if (currentNode.value != null) {
+                result[i] = currentNode.value;
+            }
+            currentNode = currentNode.next;
+        }
+        return result;
     }
 
-    // checks if value is present in Queue and returns the number of occurrences of that value (0 if not found)
-    // must use n.compareTo(v) == 0, not equals()
+// checks if value is present in Queue and returns the number of occurrences of that value (0 if not found)
+// must use n.compareTo(v) == 0, not equals()
     public int countValues(T value) {
-        throw new RuntimeException("Not Implemented!");
+        int count = 0;
+        Node currentNode = enqueue;
+
+        for (int i = 0; i < size; i++) {
+            if (currentNode.value != null && currentNode.value.compareTo(value) == 0) {
+                count++;
+            }
+            currentNode = currentNode.next;
+        }
+
+        return count;
 
     }
 
-    // also implement methods required by Iterable interface (and test it in Unit tests)
 }
