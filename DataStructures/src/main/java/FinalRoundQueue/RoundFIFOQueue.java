@@ -1,6 +1,30 @@
 package FinalRoundQueue;
 
-public class RoundFIFOQueue<T extends Comparable> {
+import java.util.Iterator;
+
+public class RoundFIFOQueue<T extends Comparable> implements Iterable<T> {
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+                private Node current = dequeue;
+
+                @Override
+                public boolean hasNext() {
+                    return current != enqueue.next;
+                }
+
+                @Override
+                public T next() {
+                    if (!hasNext()) {
+                        throw new RuntimeException("No next element");
+                    }
+                    T value = current.value;
+                    current = current.next;
+                    return value;
+                }
+            };
+    }
 
     private class Node {
 
@@ -39,15 +63,18 @@ public class RoundFIFOQueue<T extends Comparable> {
         }
 
         Node currentNode = enqueue;
+        int i = 0;
         do {
             System.out.printf("Node debugId#%s: %s\n", currentNode.debugId, currentNode.value);
             currentNode = currentNode.next;
-        } while (currentNode != enqueue);
+            i++;
+        } while (i < size);
 
         // Check if you have returned to enqueue
         if (currentNode != enqueue) {
             throw new RuntimeException("Internal error: queue may not be circular");
         }
+
     }
 
     // puts value into the queue
@@ -74,13 +101,16 @@ public class RoundFIFOQueue<T extends Comparable> {
                 beforeDequeue.next = newCont;
                 enqueue = dequeue = newCont;
                 maxSize++;
+                size++;
             }
         } else {
+            size++;
             enqueue.value = value;
             dequeue = enqueue;
-            enqueue = enqueue.next;
+            if (size != maxSize) {
+                enqueue = enqueue.next;
+            }
         }
-        size++;
 
     }
 
@@ -114,13 +144,14 @@ public class RoundFIFOQueue<T extends Comparable> {
     public T[] toArray(T[] template) {
         T[] result = (T[]) java.lang.reflect.Array.newInstance(template.getClass().getComponentType(), size);
         Node currentNode = dequeue;
-        for (int i = size - 1; i >= 0; i--) {
-            // if node value is null, go to next
-            if (currentNode.value != null) {
-                result[i] = currentNode.value;
-            }
+
+        int i = 0;
+        do {
+            result[i] = currentNode.value;
             currentNode = currentNode.next;
-        }
+            i++;
+        } while (i < size);
+
         return result;
     }
 
